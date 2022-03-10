@@ -1,16 +1,32 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 
 const AddressItem = ({ address, setAddresses }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editCity, setEditCity] = useState(address.city);
-  const [editName, setEditName] = useState(address.name);
+  const reducer = (state, action) => {
+    console.log(action);
+    switch (action.type) {
+      case "setIsEditing":
+        return { ...state, isEditing: action.payLoad };
+      case "setEditCity":
+        return { ...state, editCity: action.payload };
+      case "setEditName":
+        return { ...state, editName: action.payload };
+      default:
+        return state;
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, {
+    isEditing: false,
+    editCity: address.city,
+    editName: address.name,
+  });
 
   const saveHandler = (id) => {
-    setIsEditing(false);
+    dispatch({ type: "setIsEditing", payLoad: false });
     setAddresses((prevAdd) =>
       prevAdd.map((address) => {
         if (address.id === id) {
-          return { id: address.id, name: editName, city: editCity };
+          return { id: address.id, name: state.editName, city: state.editCity };
         } else {
           return address;
         }
@@ -20,34 +36,34 @@ const AddressItem = ({ address, setAddresses }) => {
 
   return (
     <div>
-      {isEditing && (
+      {state.isEditing && (
         <div>
           <input
             type="text"
             placeholder="name"
-            value={editName}
+            value={state.editName}
             onChange={(e) => {
-              setEditName(e.target.value);
+              dispatch({ type: "setEditName", payload: e.target.value });
             }}
           />
           <input
             type="text"
             placeholder="city"
-            value={editCity}
+            value={state.editCity}
             onChange={(e) => {
-              setEditCity(e.target.value);
+              dispatch({ type: "setEditCity", payload: e.target.value });
             }}
           />
           <button onClick={() => saveHandler(address.id)}>Save</button>
         </div>
       )}
-      {!isEditing && (
+      {!state.isEditing && (
         <div>
           <h2>{address.name}</h2>
           <h2>{address.city}</h2>
           <button
             onClick={() => {
-              setIsEditing(true);
+              dispatch({ type: "setIsEditing", payLoad: true });
             }}
           >
             Edit
