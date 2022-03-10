@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import uuid from "react-uuid";
+import AddressItem from "./AddressItem";
 
-function App() {
+const App = () => {
+  const [addresses, setAddresses] = useState([
+    { id: uuid(), name: "sudhanshu soni", city: "bhilai" },
+    { id: uuid(), name: "Pravesh vyas", city: "bhilai" },
+  ]);
+  const [showNewAddInput, setShowNewAddInput] = useState(false);
+
+  const addNewAddress = (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const city = e.target.city.value;
+    setAddresses((prevAdd) => [
+      ...prevAdd,
+      { id: uuid(), name: name, city: city },
+    ]);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {addresses.map((address) => (
+        <li>
+          <AddressItem address={address}></AddressItem>;
+        </li>
+      ))}
+
+      {!showNewAddInput && (
+        <button onClick={() => setShowNewAddInput(true)}>
+          Add new Address
+        </button>
+      )}
+      {showNewAddInput && (
+        <div>
+          <form action="" onSubmit={addNewAddress}>
+            <input type="text" placeholder="Enter your name" name="name" />
+            <input type="text" placeholder="Enter city name" name="city" />
+            <button type="submit">Save</button>
+          </form>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
