@@ -1,13 +1,21 @@
 import { useState } from "react";
 
-const AddressItem = ({ address }) => {
+const AddressItem = ({ address, setAddresses }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editCity, setEditCity] = useState(address.city);
   const [editName, setEditName] = useState(address.name);
 
   const saveHandler = (id) => {
-    console.log(id);
     setIsEditing(false);
+    setAddresses((prevAdd) =>
+      prevAdd.map((address) => {
+        if (address.id === id) {
+          return { id: address.id, name: editName, city: editCity };
+        } else {
+          return address;
+        }
+      })
+    );
   };
 
   return (

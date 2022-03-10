@@ -22,8 +22,12 @@ const App = () => {
   return (
     <div className="App">
       {addresses.map((address) => (
-        <li>
-          <AddressItem address={address}></AddressItem>;
+        <li key={address.id}>
+          <AddressItem
+            address={address}
+            setAddresses={setAddresses}
+          ></AddressItem>
+          ;
         </li>
       ))}
 
